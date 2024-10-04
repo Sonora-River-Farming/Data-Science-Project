@@ -1,0 +1,5 @@
+La información incluye datos sobre la producción pecuaria en el estado de Sonora, México, abarcando diferentes especies y productos, así como su volumen y precio. Estos datos están organizados en un archivo CSV que contiene registros desde 2013 hasta 2023.
+El conjunto de datos incluye las siguientes columnas: Año, Clave_Estado, Nombre_Estado, Clave_Municipio, Nombre_Municipio, Nombre_Especie, Clave_Producto, Nombre_Producto, Volumen, Precio y Valor Total.
+Cada registro proporciona información sobre la producción de ganado, incluyendo el tipo de producto y su valor en el mercado, lo que permite realizar análisis sobre tendencias de producción y comparación entre diferentes municipios y especies.
+Los datos fueron obtenidos del Sistema de Información Agropecuaria de México (SIAP) a través del portal de datos abiertos (http://infosiap.siap.gob.mx/gobmx/datosAbiertos_p.php) con fecha del 6 de agosto de 2024.
+
