@@ -1,0 +1,10 @@
+CLAVE PARÁMETRO,NOMBRE PARÁMETRO,UNIDAD DE MEDIDA
+COLI_FEC,Coliformes Fecales,NMP/100 mL
+E_COLI,Escherichia coli,NMP/100 mL
+DBO_TOT,Demanda Bioquímica de Oxígeno Total,mg/L
+DQO_TOT,Demanda Química de Oxígeno Total,mg/L
+N_TOT,Nitrógeno Total (Cálculo),mg/L
+TOX_D_48_UT,"Toxicidad Daphnia magna, 48 h",UT
+TOX_FIS_SUP_15_UT,"Toxicidad Vibrio fischeri Superficial, 15min",UT
+P_TOT,Fósforo Total,mg/L
+OD_mg/L,Oxígeno Disuelto,mg/L
