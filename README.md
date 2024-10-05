@@ -82,7 +82,7 @@ You will need the following to run the project:
 Ensure the .env file contains the following:
 
 ```
-    DVC_REMOTE=<Your_Google_Drive_Remote_URL>
+DVC_REMOTE=gdrive://<Your_Google_Drive_Remote_URL>
 ```
 
 This DVC_REMOTE will specify the Google Drive remote storage URL used by DVC for data versioning.
@@ -99,27 +99,38 @@ Follow these steps to create your own Google Cloud project and generate OAuth cr
 
 https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended
 
+Setup the credentials (for each GDrive remote):
+```bash
+dvc remote modify myremote gdrive_client_id <client-id>
+dvc remote modify myremote gdrive_client_secret <client-secret>
+```
+
+After following the steps above, initialize DVC::
+```bash
+dvc init
+```
+
 ## Running the Project
 
 1. Set up the environment:
 ```bash
-    make create_environment
+make create_environment
 ```
 
 2. Install required packages:
 ```bash
-    make requirements
+make requirements
 ```
 
 3. Download and Process Data: To download and process the data automatically with DVC tracking:
 ```bash
-    make data
+make data
 ```
 
 4. To download the data separately and process it later:
 ```bash
-    make download
-    make process
+make download
+make process
 ```
 
 ## Makefile Commands
@@ -157,22 +168,22 @@ DVC is used to manage and track the datasets. Below are the key commands for DVC
 
 * Initialize DVC:
 ```bash
-    dvc init
+dvc init
 ```
 
 * Add DVC Remote: Configured with Google Drive remote:
 ```bash
-    dvc remote add -d myremote gdrive://<your-folder-id>
+dvc remote add -d myremote gdrive://<your-folder-id>
 ```
 
 * Track a File: Track downloading or processing data with DVC:
 ```bash
-    dvc add data/raw/water_quality_raw_data.xlsb
+dvc add data/raw/water_quality_raw_data.xlsb
 ```
 
 * Push Data to Remote: Push tracked data to the remote storage:
 ```bash
-    dvc push
+dvc push
 ```
 
 ## Data Profile Report
