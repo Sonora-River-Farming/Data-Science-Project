@@ -175,6 +175,19 @@ DVC is used to manage and track the datasets. Below are the key commands for DVC
     dvc push
 ```
 
+## Data Profile Report
+Data profiling reports will be available through the following GitHub Pages links:
+* **Livestock report:** https://sonora-river-farming.github.io/Data-Science-Project/livestock_report.html
+* **Water quality report:** https://sonora-river-farming.github.io/Data-Science-Project/water_report.html
+
+These reports provide a comprehensive analysis of the datasets, including:
+
+* Descriptive statistics: Summary of key characteristics of each variable, such as mean, median, standard deviation, etc.
+* Data distributions: Graphical visualizations showing how the values ​​of each variable are distributed.
+* Null values: Identification and percentage of missing data in each column.
+* Correlations: Analysis of the relationship between the different variables.
+Duplicate detection: Number of duplicate records in the dataset.
+
 ## License
 
 This project is licensed under the MIT License.
