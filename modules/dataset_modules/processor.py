@@ -5,6 +5,7 @@ import re
 import pyarrow as pa
 import pyarrow.parquet as pq
 import typer
+import git
 from loguru import logger
 from tqdm import tqdm
 from ydata_profiling import ProfileReport
@@ -129,14 +130,14 @@ def water_process(file):
     df_water_tidy_dic = df_water_dic[df_water_dic['CLAVE PARÁMETRO'].isin(POLLUTANTS)]
     write_csv(df_water_tidy_dic, WATER_PROCESSED_DATA_REFERENCES_DIR, 5)
 
-    # Create the data profile report
-    logger.info(f"Creating data profile report")
+    # Create the data profile report and upload to GitHub
+    logger.info(f"Creating data profile report and pushing to GitHub")
     profile_data(df_water_filtered_sonora, WATER_DOC_DIR, title="Data Profile Report: Data Quality")
+    upload_report(WATER_DOC_DIR)
 
-    logger.success(f"Tasks successfully completed for file {FILE_NAME}")
+    logger.success(f"Tasks successfully completed for file {WATER_DOC_DIR}")
 
-
-
+  
 def livestock_process(file_list):
     # FILE_NAME = file
     # RAW_LIVESTOCK_DATA_DIR = RAW_DATA_DIR / FILE_NAME
@@ -206,14 +207,16 @@ def livestock_process(file_list):
     livestock_filtered['Clave_Municipio'] = livestock_filtered['Clave_Municipio'].astype(int)
     livestock_filtered['Clave_Producto'] = livestock_filtered['Clave_Producto'].astype(int)
 
-
     # Save new DataFrame to a Parquet file
     logger.info(f"Saving file {OUTPUT_FILE}")
     write_parquet(livestock_filtered, LIVESTOCK_RAW_DATA_DIR, 100)
 
-    # Create the data profile report
-    logger.info(f"Creating data profile report")
+    # Create the data profile report and upload to GitHub
+    logger.info(f"Creating data profile report and pushing to GitHub")
     profile_data(livestock_filtered, LIVESTOCK_DOC_DIR, title="Data Profile Report: Livestock Data")
+    upload_report(LIVESTOCK_DOC_DIR)
+
+    logger.success(f"Tasks successfully completed for file {LIVESTOCK_DOC_DIR}.")
 
 def profile_data(df, path, title):
     # Create the data profile report
@@ -221,6 +224,20 @@ def profile_data(df, path, title):
 
     # Save the report as an HTML file
     profile.to_file(path)
+
+def upload_report(path):
+    try:
+        repo_path = Path(path).parent.parent
+        repo = git.Repo(repo_path)
+        repo.git.add('docs/')
+        repo.index.commit(f"chore: update data profile report")
+        origin = repo.remote(name='origin')
+        origin.push()
+        
+        logger.success(f"Report successfully uploaded to GitHub.")
+    
+    except Exception as e:
+        logger.error(f"An error occurred while creating or uploading the report: {e}")
 
 @app.command()
 def process():
