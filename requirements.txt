@@ -21,5 +21,6 @@ dvc-gdrive
 python-dotenv
 pyarrow
 ydata-profiling
+GitPython
 openpyxl  # delete
 -e .
