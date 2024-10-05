@@ -14,4 +14,12 @@ python-dotenv
 scikit-learn
 tqdm
 typer
+pyxlsb
+dvc
+dvc-gdrive
+dvc-gdrive
+python-dotenv
+pyarrow
+ydata-profiling
+openpyxl  # delete
 -e .
