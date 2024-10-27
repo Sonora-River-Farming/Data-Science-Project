@@ -74,8 +74,6 @@ You will need the following to run the project:
     └── plots.py                <- Code to create visualizations
 ```
 
-
-
 ## Environment Setup
 ### Configuration .env file
 
@@ -83,9 +81,11 @@ Ensure the .env file contains the following:
 
 ```
 DVC_REMOTE=gdrive://<Your_Google_Drive_Remote_URL>
+DVC_GDRIVE_CLIENT_ID='client-id'
+DVC_GDRIVE_CLIENT_SECRET='client-secret'
 ```
 
-This DVC_REMOTE will specify the Google Drive remote storage URL used by DVC for data versioning.
+**DVC_REMOTE** will specify the Google Drive remote storage URL used by DVC for data versioning.
 
 ### Configuration Details in config.py
 **URL_LIST:** This list contains the datasets that are downloaded and processed. Each entry includes a URL, metadata about the file, and the file name.
@@ -95,26 +95,22 @@ This DVC_REMOTE will specify the Google Drive remote storage URL used by DVC for
 **MUNICIPALITY:** Defines a list of municipalities in Sonora state, Mexico, where the analysis will focus. The data related to these regions will be filtered and processed.
 
 ### Setup DVC remote with Google Drive
-Follow these steps to create your own Google Cloud project and generate OAuth credentials for your GDrive remotes to connect to Google Drive.
+Follow these steps to create your own Google Cloud project and generate OAuth credentials for your GDrive remotes to connect to Google Drive. Please note that you must have the virtual environment activated.
 
 https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended
 
-Setup the credentials (for each GDrive remote):
+This command configures DVC, initializing the repository, setting credentials, and adding the remote. Information is obtained from the .env file. The REMOTE argument is optional and if not provided, it will use "origin" as the default value:
 ```bash
-dvc remote modify myremote gdrive_client_id <client-id>
-dvc remote modify myremote gdrive_client_secret <client-secret>
+make dvc_setup REMOTE="my_remote"
 ```
 
-After following the steps above, initialize DVC::
-```bash
-dvc init
-```
+*Note: If you have any problems with the Python version or interpreter, you can specify your own Python version or interpreter by changing the PYTHON_INTERPRETER and PYTHON_VERSION variables in the Makefile.*
 
 ## Running the Project
 
 1. Set up the environment:
 ```bash
-make create_environment
+make create_environment PLATFORM=<w | u>
 ```
 
 2. Install required packages:
@@ -137,7 +133,7 @@ make process
 
 Here are the available commands in the Makefile:
 
-* ```make create_environment```: Sets up a Python virtual environment.
+* ```make create_environment PLATFORM=<w | u>```: Sets up a Python virtual environment for Windows or Linux/Unix, specifying *w* or *u* respectively in the PLATFORM variable.
 
 * ```make requirements```: Installs all required Python packages from requirements.txt.
 
