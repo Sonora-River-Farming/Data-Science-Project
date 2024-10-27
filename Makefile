@@ -5,6 +5,7 @@
 PROJECT_NAME = sonora_river_farming
 PYTHON_VERSION = 3.12
 PYTHON_INTERPRETER = python3.12
+REMOTE ?= origin
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -42,23 +43,42 @@ format:
 
 
 ## Set up python interpreter environment
-#.PHONY: create_environment
-#create_environment:
-#	@bash -c "if [ ! -z `which virtualenvwrapper.sh` ]; then source `which virtualenvwrapper.sh`; mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); else mkvirtualenv.bat $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER); fi"
-#	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-	
 .PHONY: create_environment
-create_environment:
+create_environment: 
+	ifeq ($(PLATFORM), w)
+		$(MAKE) create_environment_windows
+	else ifeq ($(PLATFORM), u)
+		$(MAKE) create_environment_linux
+	else
+		@echo "Please specify PLATFORM as 'w' (Windows) or 'u' (Linux/Unix)."
+	endif
+	
+.PHONY: create_environment_linux
+create_environment_linux:
 	@bash -c "if [ -z `which $(PYTHON_INTERPRETER)` ]; then echo 'Python interpreter $(PYTHON_INTERPRETER) not found!'; exit 1; fi; \
 	virtualenv venv && \
 	echo '>>> New virtualenv created in venv. Activate with:'; \
 	echo 'source venv/bin/activate'"
 
+.PHONY: create_environment_windows
+create_environment_windows:
+	@if [ -z "$$(command -v $(PYTHON_INTERPRETER))" ]; then \
+		echo "Python interpreter $(PYTHON_INTERPRETER) not found!"; \
+		exit 1; \
+	fi; \
+	$(PYTHON_INTERPRETER) -m virtualenv venv; \
+	echo ">>> New virtualenv created in venv. Activate with:"; \
+	echo "source venv/Scripts/activate" || echo "venv\\Scripts\\activate.bat"
+	
 
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Setup DVC
+.PHONY: dvc_setup
+dvc_setup:
+	$(PYTHON_INTERPRETER) modules/dvc_modules/dvc_manager.py --remote "$(REMOTE)"
 
 ## Make Dataset
 .PHONY: data

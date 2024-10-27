@@ -1,0 +1,5 @@
+outs:
+- md5: ad4ae777398d1086b5c1369bc3030c6d
+  size: 53
+  hash: md5
+  path: init_dvc_repo
