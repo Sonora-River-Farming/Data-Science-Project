@@ -1,9 +1,13 @@
 from pathlib import Path
+import typer
 from loguru import logger
 import subprocess
 import sys
+import datetime
 from dotenv import load_dotenv
-from modules.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, DVC_REMOTE
+from modules.config import PROJ_ROOT, PROCESSED_DATA_DIR, RAW_DATA_DIR, DVC_ROOT, DVC_REMOTE, DVC_GDRIVE_CLIENT_ID, DVC_GDRIVE_CLIENT_SECRET
+
+app = typer.Typer()
 
 def check_dvc_repo(path = Path(".")):
     """Check if you are in a DVC repository."""
@@ -24,7 +28,7 @@ def check_dvc_repo(path = Path(".")):
         logger.info(f"DVC repository already exists.")
 
 
-def add_dvc_remote(remote_name="origin", remote_url=DVC_REMOTE):
+def add_dvc_remote(remote_url=DVC_REMOTE, remote_name="origin"):
     """Check if a DVC remote exists, and add it if not."""
     try:
         # Check if the remote already exists
@@ -46,6 +50,32 @@ def add_dvc_remote(remote_name="origin", remote_url=DVC_REMOTE):
         logger.error(f"Failed to check or add DVC remote: {e}")
         raise RuntimeError("Failed to add DVC remote.") from e
 
+def add_credentials(remote_name):
+    """
+        Add gdrive client id and gdrive client secret
+
+        Args:
+        - remote_name (str): Remote name for DVC.
+    """
+
+    logger.info(f"Adding Gdrive credentials...")
+    try:
+        subprocess.run(["dvc", "remote", "modify", str(remote_name), 'gdrive_client_id', str(DVC_GDRIVE_CLIENT_ID)], check=True)
+        logger.success(f"gdrive_client_id added to DVC successfully.")
+
+        subprocess.run(["dvc", "remote", "modify", str(remote_name), 'gdrive_client_secret', str(DVC_GDRIVE_CLIENT_SECRET)], check=True)
+        logger.success(f"gdrive_client_id added to DVC successfully.")
+
+        cache_path = Path(DVC_ROOT) / 'default.json'
+        with open(cache_path, 'w') as json_file:
+            pass
+
+        # subprocess.run(["dvc", "remote", "modify", str(remote_name), 'gdrive_user_credentials_file', str('../.gdrive/default.json')], check=True)
+        # logger.success(f"gdrive_user_credentials_file modify successfully.")
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error trying to add gdrive credentials to DVC: {e}")
+        raise RuntimeError(f"Error trying to add gdrive credentials to DVC.") from e
 
 def add_file_to_dvc(file_path):
     """Add the file to DVC."""
@@ -72,6 +102,25 @@ def push_to_dvc_remote(remote_name="origin"):
     except subprocess.CalledProcessError as e:
         logger.error(f"Error trying to push to remote {DVC_REMOTE}: {e}")
         raise RuntimeError(f"Failed to push to remote {remote_name}.") from e
+    
+def check_setup():
+    try:
+        logger.info(f"Checking DVC configuration")
+
+        path = Path(PROJ_ROOT) / '.gdrive/init_dvc_repo'
+        with open(path, 'w') as f:
+            f.write("Repository initialized\n\n")
+            f.write("Datetime:" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n")
+
+        add_file_to_dvc(path)
+        push_to_dvc_remote()
+
+        logger.success(f"DVC configuration check successful")
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Something went wrong: {e}")
+        raise RuntimeError(f"Something went wrong.") from e
+        
+    
 """ 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -88,3 +137,28 @@ if __name__ == "__main__":
             print(f"Function '{function_name}' not found.")
     else:
         print("No function name provided.") """
+
+@app.command()
+def main(
+    remote: str = typer.Option(default="origin", help="Remote name for DVC")
+):
+    """
+    Setup dvc with Google Drive.
+
+    Args:
+    - remote (str): Remote name for DVC.
+    """
+
+    # Check if you are in a DVC repository
+    check_dvc_repo()
+
+    # Check if a DVC remote exists, and add it if not 
+    add_dvc_remote(remote_url=DVC_REMOTE, remote_name=remote)
+
+    # Add gdrive_client_id and gdrive_client_secret
+    add_credentials(remote_name=remote)
+
+    check_setup()
+
+if __name__ == "__main__":
+    app()
