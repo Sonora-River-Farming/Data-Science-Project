@@ -10,7 +10,7 @@ from loguru import logger
 from tqdm import tqdm
 from ydata_profiling import ProfileReport
 from .uploader import write_parquet, write_csv
-from dvc_modules.dvc_manager import check_dvc_repo, add_dvc_remote
+from dvc_modules.dvc_manager import add_file_to_dvc, push_to_dvc_remote
 from modules.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, INTERIM_DATA_DIR, REFERENCES_DIR, DOCS_DIR, URL_LIST, MUNICIPALITY, POLLUTANTS
 
 app = typer.Typer()
@@ -130,6 +130,9 @@ def water_process(file):
     df_water_tidy_dic = df_water_dic[df_water_dic['CLAVE PARÁMETRO'].isin(POLLUTANTS)]
     write_csv(df_water_tidy_dic, WATER_PROCESSED_DATA_REFERENCES_DIR, 5)
 
+    # Create the data profile report and save the report as an HTML file
+    handle_dvc(WATER_PROCESSED_DATA_DIR)
+    
     # Create the data profile report and upload to GitHub
     logger.info(f"Creating data profile report and pushing to GitHub")
     profile_data(df_water_filtered_sonora, WATER_DOC_DIR, title="Data Profile Report: Data Quality")
@@ -143,6 +146,7 @@ def livestock_process(file_list):
     # RAW_LIVESTOCK_DATA_DIR = RAW_DATA_DIR / FILE_NAME
     OUTPUT_FILE = 'livestock_tidy_data.parquet'
     LIVESTOCK_RAW_DATA_DIR = RAW_DATA_DIR / OUTPUT_FILE 
+    LIVESTOCK_PROCESSED_DATA_DIR = PROCESSED_DATA_DIR / OUTPUT_FILE
     LIVESTOCK_RAW_DATA_REFERENCES_FILE = 'livestock_raw_data_references.csv'
     LIVESTOCK_RAW_DATA_REFERENCES_DIR = REFERENCES_DIR / LIVESTOCK_RAW_DATA_REFERENCES_FILE
     LIVESTOCK_DOC_DIR = DOCS_DIR / 'livestock_report.html'
@@ -178,7 +182,7 @@ def livestock_process(file_list):
     # Rename columns and change data types for better handling
     livestock_filtered.rename(columns=nuevos_nombres, inplace=True)
 
-        # Reemplazar comas y espacios en blanco, pero mantener el formato
+    # Reemplazar comas y espacios en blanco, pero mantener el formato
     def clean_value(value):
         if isinstance(value, str):
             return value.replace(',', '').strip()  # Limpiar comas y espacios
@@ -209,7 +213,10 @@ def livestock_process(file_list):
 
     # Save new DataFrame to a Parquet file
     logger.info(f"Saving file {OUTPUT_FILE}")
-    write_parquet(livestock_filtered, LIVESTOCK_RAW_DATA_DIR, 100)
+    write_parquet(livestock_filtered, LIVESTOCK_PROCESSED_DATA_DIR, 100)
+
+    # Create the data profile report and save the report as an HTML file
+    handle_dvc(LIVESTOCK_PROCESSED_DATA_DIR)
 
     # Create the data profile report and upload to GitHub
     logger.info(f"Creating data profile report and pushing to GitHub")
@@ -238,6 +245,13 @@ def upload_report(path):
     
     except Exception as e:
         logger.error(f"An error occurred while creating or uploading the report: {e}")
+
+def handle_dvc(file_path, remote='origin'):
+    # Add the downloaded file to DVC
+    add_file_to_dvc(file_path)
+
+    # Push to DVC remote
+    push_to_dvc_remote(remote_name=remote)
 
 @app.command()
 def process():
