@@ -68,13 +68,21 @@ def download_file(url: str, info: str, input_path: Path):
             f.write("Name: " + FILE_NAME + "\n")
         logger.success(f"Info file {INFO_FILE_NAME} created at {SUBDIR}")
         
-        # Add the downloaded file to DVC
-        add_file_to_dvc(input_path)
+        # Create the data profile report and save the report as an HTML file
+        handle_dvc(input_path)
 
-        # Push to DVC remote
-        push_to_dvc_remote()
     else:
         logger.info(f"File {FILE_NAME} already exists in the directory {SUBDIR}. Skipping download. ")
+
+def handle_dvc(file_path, remote='origin'):
+    """
+        Create the data profile report and save the report as an HTML file
+    """
+    # Add the downloaded file to DVC
+    add_file_to_dvc(file_path)
+
+    # Push to DVC remote
+    push_to_dvc_remote(remote_name=remote)
 
 @app.command()
 def download(url: str = typer.Argument(help="URL of the dataset to download"), 
