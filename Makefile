@@ -45,13 +45,13 @@ format:
 ## Set up python interpreter environment
 .PHONY: create_environment
 create_environment: 
-	ifeq ($(PLATFORM), w)
-		$(MAKE) create_environment_windows
-	else ifeq ($(PLATFORM), u)
-		$(MAKE) create_environment_linux
-	else
-		@echo "Please specify PLATFORM as 'w' (Windows) or 'u' (Linux/Unix)."
-	endif
+ifeq ($(PLATFORM), w)
+	$(MAKE) create_environment_windows
+else ifeq ($(PLATFORM), u)
+	$(MAKE) create_environment_linux
+else
+	@echo "Please specify PLATFORM as 'w' (Windows) or 'u' (Linux/Unix)."
+endif
 	
 .PHONY: create_environment_linux
 create_environment_linux:
@@ -69,7 +69,7 @@ create_environment_windows:
 	$(PYTHON_INTERPRETER) -m virtualenv venv; \
 	echo ">>> New virtualenv created in venv. Activate with:"; \
 	echo "source venv/Scripts/activate" || echo "venv\\Scripts\\activate.bat"
-	
+
 
 #################################################################################
 # PROJECT RULES                                                                 #
