@@ -1,0 +1,5 @@
+outs:
+- md5: 1114bc0d14552c1108b36ec81ecb1721
+  size: 3418243
+  hash: md5
+  path: livestock_2020_raw_data.csv

@@ -1,0 +1,14 @@
+Information from water quality monitoring sites operated by Conagua throughout the country
+
+The information includes data on lotic, lentic, coastal, and underground water bodies, covering physicochemical and microbiological parameters according to the type of water body. These data are organized in an Excel file with three spreadsheets.
+
+First sheet: Contains details about the monitoring sites, such as key, name, aquifer, state, municipality, type of water body, latitude, longitude, among others.
+
+Second sheet: Presents the results of the monitoring, grouped by site, type of water body, date of completion, and the physicochemical and microbiological parameters recorded.
+
+Third sheet: Offers a dictionary that describes each parameter, indicating its key, name, and unit of measurement.
+
+The data was obtained from the National Water Commission (CONAGUA) (https://www.gob.mx/conagua/articulos/calidad-del-agua)dated August 6, 2024.
+Downloaded on 2024-10-25 11:30:11
+From: https://files.conagua.gob.mx/aguasnacionales/TODOS%20LOS%20MONITOREOS.xlsb
+Name: water_quality_raw_data.xlsb

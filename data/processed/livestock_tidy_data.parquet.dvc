@@ -1,0 +1,5 @@
+outs:
+- md5: 8ab4f81bc1df4ef0a87ed3376e9f3307
+  size: 35344
+  hash: md5
+  path: livestock_tidy_data.parquet

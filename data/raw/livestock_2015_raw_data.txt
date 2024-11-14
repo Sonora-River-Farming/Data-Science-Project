@@ -1,0 +1,8 @@
+Information from water quality monitoring sites operated by Conagua throughout the country
+
+The information includes data on livestock production in the state of Sonora, Mexico, covering different species and products,as well as their volume and price. These data are organized in a CSV file containing records from 2015. 
+
+The dataset includes the following columns: Año, Clave_Estado, Nombre_Estado, Clave_Municipio, Nombre_Municipio, Nombre_Especie,Clave_Producto, Nombre_Producto, Volumen, Precio y Valor TotalEach record provides information on livestock production, including the type of product and its market value.The data was obtained from the Mexican Agricultural Information System (SIAP) through the open data portal (http://infosiap.siap.gob.mx/gobmx/datosAbiertos_p.php)dated August 6, 2024.
+Downloaded on 2024-10-25 20:13:49
+From: http://infosiap.siap.gob.mx/gobmx/datosAbiertos/Estadist_Produc_Pecuaria/cierre_2015.csv
+Name: livestock_2015_raw_data.csv

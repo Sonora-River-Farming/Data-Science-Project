@@ -1,0 +1,5 @@
+outs:
+- md5: b574e577d6e2a1e42a5c237a7480b6c0
+  size: 3325562
+  hash: md5
+  path: livestock_2017_raw_data.csv

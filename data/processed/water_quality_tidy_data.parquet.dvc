@@ -1,0 +1,5 @@
+outs:
+- md5: 3aa5eb0689716d74781b24527433e844
+  size: 258765
+  hash: md5
+  path: water_quality_tidy_data.parquet
